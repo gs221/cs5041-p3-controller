@@ -124,10 +124,12 @@ radio.onReceivedString(function (receivedString) {
     else if (messageParts[0] == "dead") {
         if (PLAYER_ID_STR == messageParts[1].trim()) {
             basic.showIcon(IconNames.Ghost);
-            music.playTone(Note.C, music.beat(BeatFraction.Double))
+            // music.playTone(Note.C, music.beat(BeatFraction.Double))
             while (true);
         } else {
             player_list = player_list.filter((p) => p != messageParts[1].trim());
+            current_player_index = 0;
+            current_player_index2 = 0;
         }
     }
 
