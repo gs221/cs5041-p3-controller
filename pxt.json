@@ -1,5 +1,5 @@
 {
-    "name": "Hub",
+    "name": "controller",
     "description": "",
     "dependencies": {
         "core": "*",
