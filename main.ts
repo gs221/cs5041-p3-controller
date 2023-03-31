@@ -24,27 +24,19 @@ basic.showLeds(`
 radio.setGroup(1)
 
 function kill () {
-    basic.showString("K");
-
     voted = player_list[current_player_index]
     basic.showString("" + (voted))
+
     input.onPinReleased(TouchPin.P2, function () {
-
         if (current_player_index < player_list.length - 1) {
-
             current_player_index += 1
-
             voted = player_list[current_player_index]
-
             basic.showString(voted)
-
         } else {
             current_player_index = 0;
             voted = player_list[current_player_index]
             basic.showString(voted)
-
         }
-
     })
     
     input.onPinReleased(TouchPin.P0, function() {
@@ -52,23 +44,17 @@ function kill () {
         basic.showIcon(IconNames.Yes);
         basic.clearScreen();
     })
-
 }
 
 function vote () {
-    basic.showString("V")
     voted = player_list[current_player_index2]
     basic.showString("" + (voted))
-    input.onButtonPressed(Button.B, function () {
 
+    input.onPinReleased(TouchPin.P2, function () {
         if (current_player_index2 < player_list.length - 1) {
-
             current_player_index2 += 1
-
             voted = player_list[current_player_index2]
-
             basic.showString(voted)
-
         } else {
             current_player_index2 = 0;
             voted = player_list[current_player_index2]
@@ -77,8 +63,10 @@ function vote () {
 
     })
 
-input.onButtonPressed(Button.A, function () {
+    input.onPinReleased(TouchPin.P0, function () {
         radio.sendString("vote:" + voted)
+        basic.showIcon(IconNames.Yes);
+        basic.clearScreen();
     })
 }
 
@@ -92,7 +80,6 @@ input.onButtonPressed(Button.AB, function () {
         showRole();
     }
 })
-
 
 function showRole () {
     if (role == "h") {
@@ -116,14 +103,14 @@ radio.onReceivedString(function (receivedString) {
         register = true;
     }
 
-    if (messageParts[0].trim() == "ro") {
+    else if (messageParts[0].trim() == "ro") {
         serial.writeLine(messageParts[1]);
         let roles = messageParts[1].trim().split("");
         role = roles[PLAYER_ID - 1];
         showRole()
     }
 
-    if (messageParts[0] == "stage") {
+    else if (messageParts[0] == "stage") {
         stage = messageParts[1].trim();
         if (stage == "day") {
             vote()
@@ -134,18 +121,18 @@ radio.onReceivedString(function (receivedString) {
         }
     }
     
-    // todo
-    if (messageParts[0] == "dead") {
+    else if (messageParts[0] == "dead") {
         if (PLAYER_ID_STR == messageParts[1].trim()) {
             basic.showIcon(IconNames.Ghost);
+            music.playTone(Note.C, music.beat(BeatFraction.Double))
             while (true);
         } else {
             player_list = player_list.filter((p) => p != messageParts[1].trim());
         }
     }
-    if (messageParts[0] == "playerlist") {
-        player_list = messageParts[1].split(",")
-        // basic.showString("" + (messageParts[1]))
+
+    if (messageParts[0] == "pl") {
+        player_list = messageParts[1].split("")
     }
 })
 
